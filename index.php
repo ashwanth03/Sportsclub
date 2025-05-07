@@ -1,192 +1,99 @@
-﻿<?php
-require '../../include/db_conn.php';
-page_protect();
+<?php
+
+session_start();
+if(isset($_SESSION["user_data"]))
+{
+	header("location:./dashboard/admin/");
+}
+
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
-<head> 
-
-    
-    <title>SPORTS CLUB  | Dashboard </title>
-
-    <link rel="stylesheet" href="../../css/style.css"  id="style-resource-5">
-    <script type="text/javascript" src="../../js/Script.js"></script>
-    <link rel="stylesheet" href="../../css/dashMain.css">
-    <link rel="stylesheet" type="text/css" href="../../css/entypo.css">
-     <style>
-    	.page-container .sidebar-menu #main-menu li#dash > a {
-    	background-color: #2b303a;
-    	color: #ffffff;
-		}
-
-    </style>
-
+<html>
+<head>
+	<title>Sports Club | Login</title>
+	<link rel="stylesheet" href="./css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="./css/entypo.css">
 </head>
-    <body class="page-body  page-fade" onload="collapseSidebar()">
-
-    	<div class="page-container sidebar-collapsed" id="navbarcollapse">	
+<style>
+h2 {
+  color:white;
+background-image: url("blaze_back_new.png");
+width: 1366px;
+align-items: center;
+}
+</style>
+<body>
+    <center><h2 style="color:#7CFC00;font-size:30px"><BR><BR><BR>WELCOME TO <BR>SPORTS CLUB Management System <BR><BR><BR></h2></center>
+<body class="page-body login-page login-form-fall">
+    
+    	<div id="container">
+			<div class="login-container">
 	
-		<div class="sidebar-menu">
+	<div class="login-header login-caret">
+		
+		<div class="login-content">
+			
+			<a href="#" class="logo">
+				<img src="logo1.png" alt="" />
+			</a>
+			
+			<p class="description">Dear user, log in to access the admin area!</p>
+			
+			<!-- progress bar indicator -->
+			<div class="login-progressbar-indicator">
+				<h3>43%</h3>
+				<span>logging in...</span>
+			</div>
+		</div>
+		
+	</div>
 	
-			<header class="logo-env">
-			
-			<!-- logo -->
-			<div class="logo">
-				<a href="main.php">
-					<img src="logo1.png" alt="" width="192" height="80" />
-				</a>
-			</div>
-			
-					<!-- logo collapse icon -->
-					<div class="sidebar-collapse" onclick="collapseSidebar()">
-				<a href="#" class="sidebar-collapse-icon with-animation"><!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
-					<i class="entypo-menu"></i>
-				</a>
-			</div>
-							
-			
+	<div class="login-progressbar">
+		<div></div>
+	</div>
+	
+	<div class="login-form">
 		
-			</header>
-    		<?php include('nav.php'); ?>
-    	</div>
-
-    		<div class="main-content">
-		
-				<div class="row">
-					
-					<!-- Profile Info and Notifications -->
-					<div class="col-md-6 col-sm-8 clearfix">	
-							
+		<div class="login-content">
+			
+			<form action="secure_login.php" method='post' id="bb">				
+				<div class="form-group">					
+					<div class="input-group">
+						<div class="input-group-addon">
+							<i class="entypo-user"></i>
+						</div>
+							<input type="text" placeholder="User ID" class="form-control" name="user_id_auth" id="textfield" data-rule-minlength="6" data-rule-required="true">
 					</div>
-					
-					
-					<!-- Raw Links -->
-					<div class="col-md-6 col-sm-4 clearfix hidden-xs">
-						
-						<ul class="list-inline links-list pull-right">
-
-							<li>Welcome <?php echo $_SESSION['full_name']; ?> 
-							</li>					
-						
-							<li>
-								<a href="logout.php">
-									Log Out <i class="entypo-logout right"></i>
-								</a>
-							</li>
-						</ul>
-						
-					</div>
-					
+				</div>				
+								
+				<div class="form-group">					
+					<div class="input-group">
+						<div class="input-group-addon">
+							<i class="entypo-key"></i>
+						</div>
+						<input type="password" name="pass_key" id="pwfield" class="form-control" data-rule-required="true" data-rule-minlength="6" placeholder="Password">
+					</div>				
 				</div>
-
-			<h2>SPORTS CLUB </h2>
-
-			<hr>
-
-			<div class="col-sm-3"><a href="revenue_month.php">			
-				<div class="tile-stats tile-red">
-					<div class="icon"><i class="entypo-users"></i></div>
-						<div class="num" data-postfix="" data-duration="1500" data-delay="0">
-						<h2>Paid Income This Month</h2><br>	
-						<?php
-							date_default_timezone_set("Asia/Calcutta"); 
-							$date  = date('Y-m');
-							$query = "select * from enrolls_to WHERE  paid_date LIKE '$date%'";
-
-							//echo $query;
-							$result  = mysqli_query($con, $query);
-							$revenue = 0;
-							if (mysqli_affected_rows($con) != 0) {
-							    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-							    	$query1="select * from plan where pid='".$row['pid']."'";
-							    	$result1=mysqli_query($con,$query1);
-							    	if($result1){
-							    		$value=mysqli_fetch_row($result1);
-							        $revenue = $value[4] + $revenue;
-							    	}
-							    }
-							}
-							echo "₹".$revenue;
-							?>
-						</div>
-				</div></a>
-			</div>
-			
-
-			<div class="col-sm-3"><a href="table_view.php">			
-				<div class="tile-stats tile-green">
-					<div class="icon"><i class="entypo-chart-bar"></i></div>
-						<div class="num" data-postfix="" data-duration="1500" data-delay="0">
-						<h2>Total <br>Members</h2><br>	
-							<?php
-							$query = "select COUNT(*) from users";
-
-							$result = mysqli_query($con, $query);
-							$i      = 1;
-							if (mysqli_affected_rows($con) != 0) {
-							    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-							        echo $row['COUNT(*)'];
-							    }
-							}
-							$i = 1;
-							?>
-						</div>
-				</div></a>
-			</div>	
 				
-			<div class="col-sm-3"><a href="over_members_month.php">			
-				<div class="tile-stats tile-aqua">
-					<div class="icon"><i class="entypo-mail"></i></div>
-						<div class="num" data-postfix="" data-duration="1500" data-delay="0">
-						<h2>Joined This Month</h2><br>	
-							<?php
-							date_default_timezone_set("Asia/Calcutta"); 
-							$date  = date('Y-m');
-							$query = "select COUNT(*) from users WHERE joining_date LIKE '$date%'";
-
-							//echo $query;
-							$result = mysqli_query($con, $query);
-							$i      = 1;
-							if (mysqli_affected_rows($con) != 0) {
-							    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-							        echo $row['COUNT(*)'];
-							    }
-							}
-							$i = 1;
-							?>
-						</div>
-				</div></a>			
-			</div>
-
-			<div class="col-sm-3"><a href="view_plan.php">			
-				<div class="tile-stats tile-blue">
-					<div class="icon"><i class="entypo-rss"></i></div>
-						<div class="num" data-postfix="" data-duration="1500" data-delay="0">
-						<h2>Total Plan Available</h2><br>	
-							<?php
-							$query = "select COUNT(*) from plan where active='yes'";
-
-							//echo $query;
-							$result  = mysqli_query($con, $query);
-							$i = 1;
-							if (mysqli_affected_rows($con) != 0) {
-							    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-							        echo $row['COUNT(*)'];
-							    }
-							}
-							$i = 1;
-							?>
-						</div>
-				</div></a>
-			</div>
-			
-<marquee direction="right"><img src="fball.gif" width="88" height="70" alt="Tutorials " border="0"></marquee>
-
-			
-   
-    	<?php include('footer.php'); ?>
+				<div class="form-group">
+					<button type="submit" name="btnLogin" class="btn btn-primary">
+						Login In
+						<i class="entypo-login"></i>
+					</button>
+				</div>
+			</form>
+		
+				<div class="login-bottom-links">
+					<a href="forgot_password.php" class="link">Forgot your password?</a>
+				</div>			
+		</div>
+		
+	</div>
+	
 </div>
 
-  
-    </body>
+		</div>
+
+</body>
 </html>
